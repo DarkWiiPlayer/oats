@@ -1,0 +1,12 @@
+[document]
+	[section]
+		[title] Document
+
+		Paragraph
+
+		Multiline
+		Paragraph
+
+		Text with a [nested nested] node
+
+		Text with an [nested] empty nested node
