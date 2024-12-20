@@ -30,6 +30,36 @@ local function handledepth(callback, last, current, number)
 	end
 end
 
+local function parsetext(callback, text, number)
+	local start = 1
+	local inline while true do
+		inline = text:find("[", start, true)
+		if inline then
+			callback("text", text:sub(start, inline - 1))
+			local close = text:find("]", inline, true)
+			if close then
+				local inline_content = text:sub(inline+1, close-1)
+				local inline_name, inline_text
+				inline_name, inline_text = inline_content:match("^([^%s]+)%s+(.+)$")
+				if not inline_name then
+					inline_name = inline_content
+				end
+				callback("open", inline_name)
+				if inline_text then
+					callback("text", inline_text)
+				end
+				callback("close")
+				start = close + 1
+			else
+				error(string.format("Endless inline tag on %i:%i", number, inline))
+			end
+		else
+			break
+		end
+	end
+	callback("text", text:sub(start))
+end
+
 --- @param callback callback
 --- @param line string
 --- @param number number Line number currently being processed
@@ -47,7 +77,7 @@ local function parseline(callback, line, lastdepth, number)
 	if depth then
 		handledepth(callback, lastdepth, depth, number)
 		callback("open", name)
-		callback("text", text)
+		parsetext(callback, text, number)
 		callback("close")
 		return depth-1 -- Minus one because the tag is already closed
 	end
@@ -59,7 +89,7 @@ local function parseline(callback, line, lastdepth, number)
 	depth, text = line:match("^\t*()(.*)$")
 	if depth then
 		handledepth(callback, lastdepth, depth, number)
-		callback("text", text)
+		parsetext(callback, text, number)
 		return depth-1 -- Minus one because text doesn't get closed
 	end
 end

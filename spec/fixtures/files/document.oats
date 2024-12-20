@@ -1,12 +1,5 @@
 [document]
 	[section]
-		[title] Document
-
-		Paragraph
-
-		Multiline
-		Paragraph
-
-		Text with a [nested nested] node
-
-		Text with an [nested] empty nested node
+		Text with a [inline inline] node
+		Text with an [inline] empty nested node
+		[one-line] with [inline] node

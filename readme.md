@@ -25,14 +25,39 @@ Nested elements are indented
     nested text
 ```
 
-Multi-line text nodes are yet to be decided. As of now, the options are:
+Tags with only one text node can be shortened to one-line tags:
 
-1. Consecutive non-empty lines of text are merged with a space
-2. Any non-empty text line is always a single text element
+```
+[tag-name] single text node
+
+evaluates to the same as
+
+[tag-name]
+    single text node
+```
+
+Text nodes mixed with one-line tags can further be shortened with inline tags:
+
+```
+Plain text with some
+[bold] tagged
+text
+[emphasis] in between
+
+evaluates to the same as
+
+Plain text with some [bold tagged] text [emphasis in between]
+```
 
 **Note**: Consumers may have a better understanding of whether and how to join text
 elements together, while the interpreter would have to decide on a joining
 strategy (most likely concatenation with a space character in between).
+
+### Data Type
+
+OATS makes no attempts to interpret text.
+Everything is considered a string and it is left up to the consuming application
+to decide how to interpret the textual representation.
 
 ### Conventions
 
@@ -44,5 +69,9 @@ OATS tag names preserve case, but applications consuming OATS structures should
 generally ignore case.
 
 Tag names should use lowercase kebab-case.
+
+Applications that interpret parts of a tag name as a namespace should use a
+single colon `:` as the namespace separator, with namespaces preceding the tag
+name.
 
 ## Interface
